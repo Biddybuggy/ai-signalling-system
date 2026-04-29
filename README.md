@@ -83,6 +83,17 @@ Each frame follows this sequence:
 
 This is a practical computer-vision baseline, not a certified obstacle classifier.
 
+## Making alerts less error-prone (dwell + planned-stop context)
+
+Instead of treating “any blob exists” as an obstacle, the demo upgrades the decision layer with two extra realism features:
+
+- **Multi-frame tracking and dwell time**: detected blobs are associated over time and only escalated when a track stays (nearly) stationary for a configurable duration.
+- **Blocking evidence**: a track must also occupy enough of a “crossing ROI” region before it can become an obstacle.
+
+To model the “train told to stop briefly” case, the demo also includes a **planned stop suppression** mechanism:
+- If a “train-like” tracked object stays within an expected planned-stop window, it is *suppressed* (not treated as an obstacle).
+- If it exceeds the expected window (simulating a stuck train), it triggers the higher-risk dispatch logic.
+
 ## Latency model
 
 The app tracks two configurable delays:

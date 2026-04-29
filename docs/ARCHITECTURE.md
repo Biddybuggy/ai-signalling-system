@@ -69,6 +69,14 @@ This model avoids long blocking loops and keeps controls responsive.
 - If webcam returns repeated black frames: switches to synthetic stream.
 - If uploaded video ends: run terminates gracefully.
 
+## Decision logic realism (what counts as an obstacle)
+
+The vision stage produces moving/foreground blobs per frame, but the decision layer escalates only when there is:
+
+- **Temporal persistence**: blobs are tracked and a `dwell_s` counter is accumulated while the track is (nearly) stationary.
+- **Blocking evidence**: the track must occupy enough pixels inside a crossing ROI (`occupancy_ratio`).
+- **Planned-stop suppression (demo)**: if an object appears train-like and its dwell is within the configured “expected planned stop” window, it is not treated as an obstacle.
+
 ## Security and safety posture
 
 The implementation is intentionally minimal and does not include:
